@@ -25,6 +25,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -46,27 +47,13 @@ ADC_HandleTypeDef hadc1;
 
 SPI_HandleTypeDef hspi2;
 
+TIM_HandleTypeDef htim1;
+
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
-rfm95_handle_t rfm95_handle = {
-        .spi_handle = &hspi2,
-  		.nss_port = GPIOC,
-  		.nss_pin = GPIO_PIN_7,
-  		.nrst_port = GPIOC,
-  		.nrst_pin = GPIO_PIN_6,
-  		.device_address = {
-              0x00, 0x00, 0x00, 0x00
-          },
-  		.application_session_key = {
-              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-          },
-  		.network_session_key = {
-              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
-          },
-  		.receive_mode = RFM95_RECEIVE_MODE_NONE
-      };;
+volatile uint32_t tim_tick_msb = 0;
 
 /* USER CODE END PV */
 
@@ -76,6 +63,7 @@ static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_SPI2_Init(void);
+static void MX_TIM1_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -91,6 +79,46 @@ int _write(int file, char *ptr, int len)
 	}
 	return len;
 }
+
+static uint32_t get_precision_tick()
+{
+    __disable_irq();
+
+    printf("TIM1 value: %ld\n", __HAL_TIM_GET_COUNTER(&htim1));
+    uint32_t precision_tick = tim_tick_msb | __HAL_TIM_GET_COUNTER(&htim1);
+
+    __enable_irq();
+
+    return precision_tick;
+}
+
+static uint8_t random_int(uint8_t max)
+{
+    return 0; // TODO: MAKE IT RANDOM
+}
+
+rfm95_handle_t rfm95_handle = {
+        .spi_handle = &hspi2,
+  		.nss_port = GPIOA,
+  		.nss_pin = RFM9x_NSS_Pin,
+  		.nrst_port = GPIOC,
+  		.nrst_pin = RFM9x_RST_Pin,
+  		.device_address = {
+              0x00, 0x00, 0x00, 0x00
+          },
+  		.application_session_key = {
+              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+          },
+  		.network_session_key = {
+              0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+          },
+  		.receive_mode = RFM95_RECEIVE_MODE_NONE,
+		.precision_tick_frequency = 32768,
+		.precision_tick_drift_ns_per_s = 5000,
+		.receive_mode = RFM95_RECEIVE_MODE_RX12,
+		.get_precision_tick = get_precision_tick,
+		.random_int = random_int
+      };
 
 /* USER CODE END 0 */
 
@@ -125,16 +153,25 @@ int main(void)
   MX_USART2_UART_Init();
   MX_ADC1_Init();
   MX_SPI2_Init();
+  MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  printf("\n\r");
+  printf("\n");
 
-  // Initialise RFM95 module.
+  HAL_TIM_Base_Start(&htim1);
+
   if (!rfm95_init(&rfm95_handle)) {
-	  printf("LoRa RFM95: Init FAIL\n\r");
+	  printf("LoRa RFM9x: Init FAIL\n");
   }
   else {
-	  printf("LoRa RFM95: LoRa SUCCESS\n\r");
+	  printf("LoRa RFM9x: LoRa SUCCESS\n");
+  }
+
+  uint8_t data_packet[] = {0x01, 0x02, 0x03, 0x4};
+  if (!rfm95_send_receive_cycle(&rfm95_handle, data_packet, sizeof(data_packet))) {
+	  printf("LoRa RFM9x: Send FAIL\n");
+  } else {
+	  printf("LoRa RFM9x: Send SUCCESS\n");
   }
 
   /* USER CODE END 2 */
@@ -203,7 +240,8 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC1;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_TIM1|RCC_PERIPHCLK_ADC1;
+  PeriphClkInit.Tim1ClockSelection = RCC_TIM1CLK_HCLK;
   PeriphClkInit.Adc1ClockSelection = RCC_ADC1PLLCLK_DIV1;
 
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
@@ -310,6 +348,53 @@ static void MX_SPI2_Init(void)
 }
 
 /**
+  * @brief TIM1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM1_Init(void)
+{
+
+  /* USER CODE BEGIN TIM1_Init 0 */
+
+  /* USER CODE END TIM1_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM1_Init 1 */
+
+  /* USER CODE END TIM1_Init 1 */
+  htim1.Instance = TIM1;
+  htim1.Init.Prescaler = 0;
+  htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim1.Init.Period = 65535;
+  htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim1.Init.RepetitionCounter = 0;
+  htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM1_Init 2 */
+
+  /* USER CODE END TIM1_Init 2 */
+
+}
+
+/**
   * @brief USART2 Initialization Function
   * @param None
   * @retval None
@@ -360,7 +445,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOC, RFM95_DIO5_Pin|RFM95_DIO1_Pin|RFM95_DIO0_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(RFM9x_RST_GPIO_Port, RFM9x_RST_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(RFM9x_NSS_GPIO_Port, RFM9x_NSS_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
@@ -368,12 +456,29 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : RFM95_DIO5_Pin RFM95_DIO1_Pin RFM95_DIO0_Pin */
-  GPIO_InitStruct.Pin = RFM95_DIO5_Pin|RFM95_DIO1_Pin|RFM95_DIO0_Pin;
+  /*Configure GPIO pins : RFM9x_DIO5_Pin RFM9x_DIO1_Pin RFM9x_DIO0_Pin */
+  GPIO_InitStruct.Pin = RFM9x_DIO5_Pin|RFM9x_DIO1_Pin|RFM9x_DIO0_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : RFM9x_RST_Pin */
+  GPIO_InitStruct.Pin = RFM9x_RST_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+  HAL_GPIO_Init(RFM9x_RST_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : RFM9x_NSS_Pin */
+  GPIO_InitStruct.Pin = RFM9x_NSS_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(RFM9x_NSS_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
 
 }
 
@@ -381,11 +486,19 @@ static void MX_GPIO_Init(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-    if (GPIO_Pin == RFM95_DIO0_Pin) {
+    if (GPIO_Pin == RFM9x_DIO0_Pin)
+    {
+    	printf("EXTI CB on DIO0\n");
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO0);
-    } else if (GPIO_Pin == RFM95_DIO1_Pin) {
+    }
+    else if (GPIO_Pin == RFM9x_DIO1_Pin)
+    {
+    	printf("EXTI CB on DIO1\n", GPIO_Pin);
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO1);
-    } else if (GPIO_Pin == RFM95_DIO5_Pin) {
+    }
+    else if (GPIO_Pin == RFM9x_DIO5_Pin)
+    {
+    	printf("EXTI CB on DIO5\n", GPIO_Pin);
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO5);
     }
 }
@@ -419,7 +532,7 @@ void assert_failed(uint8_t *file, uint32_t line)
 {
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
-     ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+     ex: printf("Wrong parameters value: file %s on line %d\n", file, line) */
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */

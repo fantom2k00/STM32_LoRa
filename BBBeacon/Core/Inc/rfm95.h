@@ -29,34 +29,11 @@ typedef struct {
 
 typedef struct {
 
-	/**
-	 * MAGIC
-	 */
 	uint16_t magic;
-
-	/**
-	 * The current RX frame counter value.
-	 */
 	uint16_t rx_frame_count;
-
-	/**
-	 * The current TX frame counter value.
-	 */
 	uint16_t tx_frame_count;
-
-	/**
-	 * The delay to the RX1 window.
-	 */
 	uint8_t rx1_delay;
-
-	/**
-	 * The configuration of channels;
-	 */
 	rfm95_channel_config_t channels[16];
-
-	/**
-	 * Mask defining which channels are configured.
-	 */
 	uint16_t channel_mask;
 
 } rfm95_eeprom_config_t;
@@ -89,119 +66,38 @@ typedef enum
 
 #define RFM95_INTERRUPT_COUNT 3
 
-/**
- * Structure defining a handle describing an RFM95(W) transceiver.
- */
 typedef struct {
 
-	/**
-	 * The handle to the SPI bus for the device.
-	 */
 	SPI_HandleTypeDef *spi_handle;
-
-	/**
-	 * The port of the NSS pin.
-	 */
 	GPIO_TypeDef *nss_port;
-
-	/**
-	 * The NSS pin.
-	 */
 	uint16_t nss_pin;
 
-	/**
-	 * The port of the RST pin.
-	 */
 	GPIO_TypeDef *nrst_port;
-
-	/**
-	 * The RST pin.
-	 */
 	uint16_t nrst_pin;
 
-	/**
-	 * The device address for the LoraWAN
-	 */
 	uint8_t device_address[4];
-
-	/**
-	 * The network session key for ABP activation with the LoraWAN
-	 */
 	uint8_t network_session_key[16];
-
-	/**
-	 * The application session key for ABP activation with the LoraWAN
-	 */
 	uint8_t application_session_key[16];
 
-	/**
-	 * The frequency of the precision tick in Hz.
-	 */
 	uint32_t precision_tick_frequency;
-
-	/**
-	 * The +/- timing drift per second in nanoseconds.
-	 */
 	uint32_t precision_tick_drift_ns_per_s;
-
-	/**
-	 * The receive mode to operate at.
-	 */
 	rfm95_receive_mode_t receive_mode;
-
-	/**
-	 * Function provided that returns a precise tick for timing critical operations.
-	 */
 	rfm95_get_precision_tick get_precision_tick;
-
-	/**
-	 * Function that provides a precise sleep until a given tick count is reached.
-	 */
 	rfm95_precision_sleep_until precision_sleep_until;
 
-	/**
-	 * Function that provides a random integer.
-	 */
 	rfm95_random_int random_int;
-
-	/**
-	 * Function that returns the device's battery level.
-	 */
 	rfm95_get_battery_level get_battery_level;
 
-	/**
-	 * The load config function pointer can be used to load config values from non-volatile memory.
-	 * Can be set to NULL to skip.
-	 */
 	rfm95_load_eeprom_config reload_config;
-
-	/**
-	 * The save config function pointer can be used to store config values in non-volatile memory.
-	 * Can be set to NULL to skip.
-	 */
 	rfm95_save_eeprom_config save_config;
-
-	/**
-	 * Callback called after the interrupt functions have been properly configred;
-	 */
 	rfm95_on_after_interrupts_configured on_after_interrupts_configured;
-
-	/**
-	 * The config saved into the eeprom.
-	 */
 	rfm95_eeprom_config_t config;
-
-	/**
-	 * Tick values when each interrupt was called.
-	 */
 	volatile uint32_t interrupt_times[RFM95_INTERRUPT_COUNT];
 
 } rfm95_handle_t;
 
 bool rfm95_init(rfm95_handle_t *handle);
-
 bool rfm95_set_power(rfm95_handle_t *handle, int8_t power);
-
 bool rfm95_send_receive_cycle(rfm95_handle_t *handle, const uint8_t *send_data, size_t send_data_length);
 
 void rfm95_on_interrupt(rfm95_handle_t *handle, rfm95_interrupt_t interrupt);

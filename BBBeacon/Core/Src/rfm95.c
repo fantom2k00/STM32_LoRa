@@ -155,6 +155,8 @@ static bool wait_for_irq(rfm95_handle_t *handle, rfm95_interrupt_t interrupt, ui
 	uint32_t timeout_tick = handle->get_precision_tick() + timeout_ms * handle->precision_tick_frequency / 1000;
 
 	while (handle->interrupt_times[interrupt] == 0) {
+		printf("Waiting for interrupt %d...\n", interrupt);
+		HAL_Delay(2000);
 		if (handle->get_precision_tick() >= timeout_tick) {
 			return false;
 		}
@@ -210,10 +212,10 @@ bool rfm95_init(rfm95_handle_t *handle)
 	assert(handle->spi_handle->Init.DataSize == SPI_DATASIZE_8BIT);
 	assert(handle->spi_handle->Init.CLKPolarity == SPI_POLARITY_LOW);
 	assert(handle->spi_handle->Init.CLKPhase == SPI_PHASE_1EDGE);
-	//assert(handle->get_precision_tick != NULL);
-	//assert(handle->random_int != NULL);
+	assert(handle->get_precision_tick != NULL);
+	assert(handle->random_int != NULL);
 	//assert(handle->precision_sleep_until != NULL);
-	//assert(handle->precision_tick_frequency > 10000);
+	assert(handle->precision_tick_frequency > 10000);
 
 	reset(handle);
 
@@ -551,37 +553,48 @@ static bool send_package(rfm95_handle_t *handle, uint8_t *payload_buf, size_t pa
                          uint32_t *tx_ticks)
 {
 	// Configure channel for transmission.
-	if (!configure_channel(handle, channel)) return false;
+	if (!configure_channel(handle, channel))
+		return false;
 
 	// Configure modem (125kHz, 4/6 error coding rate, SF7, single packet, CRC enable, AGC auto on)
-	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_1, 0x72)) return false;
-	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_2, 0x74)) return false;
-	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_3, 0x04)) return false;
+	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_1, 0x72))
+		return false;
+	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_2, 0x74))
+		return false;
+	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_3, 0x04))
+		return false;
 
 	// Set IQ registers according to AN1200.24.
-	if (!write_register(handle, RFM95_REGISTER_INVERT_IQ_1, RFM95_REGISTER_INVERT_IQ_1_TX)) return false;
-	if (!write_register(handle, RFM95_REGISTER_INVERT_IQ_2, RFM95_REGISTER_INVERT_IQ_2_TX)) return false;
+	if (!write_register(handle, RFM95_REGISTER_INVERT_IQ_1, RFM95_REGISTER_INVERT_IQ_1_TX))
+		return false;
+	if (!write_register(handle, RFM95_REGISTER_INVERT_IQ_2, RFM95_REGISTER_INVERT_IQ_2_TX))
+		return false;
 
 	// Set the payload length.
-	if (!write_register(handle, RFM95_REGISTER_PAYLOAD_LENGTH, payload_len)) return false;
+	if (!write_register(handle, RFM95_REGISTER_PAYLOAD_LENGTH, payload_len))
+		return false;
 
 	// Enable tx-done interrupt, clear flags and previous interrupt time.
-	if (!write_register(handle, RFM95_REGISTER_DIO_MAPPING_1, RFM95_REGISTER_DIO_MAPPING_1_IRQ_FOR_TXDONE)) return false;
-	if (!write_register(handle, RFM95_REGISTER_IRQ_FLAGS, 0xff)) return false;
+	if (!write_register(handle, RFM95_REGISTER_DIO_MAPPING_1, RFM95_REGISTER_DIO_MAPPING_1_IRQ_FOR_TXDONE))
+		return false;
+	if (!write_register(handle, RFM95_REGISTER_IRQ_FLAGS, 0xff))
+		return false;
 	handle->interrupt_times[RFM95_INTERRUPT_DIO0] = 0;
 	handle->interrupt_times[RFM95_INTERRUPT_DIO5] = 0;
 
 	// Move modem to lora standby.
-	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_STANDBY)) return false;
+	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_STANDBY))
+		return false;
 
 	// Wait for the modem to be ready.
 	wait_for_irq(handle, RFM95_INTERRUPT_DIO5, RFM95_WAKEUP_TIMEOUT);
 
 	// Set pointer to start of TX section in FIFO.
-	if (!write_register(handle, RFM95_REGISTER_FIFO_ADDR_PTR, 0x80)) return false;
+	if (!write_register(handle, RFM95_REGISTER_FIFO_ADDR_PTR, 0x80))
+		return false;
 
 	// Write payload to FIFO.
-	for (size_t i = 0; i < payload_len; i++) {
+	/*for (size_t i = 0; i < payload_len; i++) {
 		write_register(handle, RFM95_REGISTER_FIFO_ACCESS, payload_buf[i]);
 	}
 
@@ -598,7 +611,7 @@ static bool send_package(rfm95_handle_t *handle, uint8_t *payload_buf, size_t pa
 	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_SLEEP)) return false;
 
 	// Increment tx frame counter.
-	handle->config.tx_frame_count++;
+	handle->config.tx_frame_count++;*/
 
 	return true;
 }
@@ -750,7 +763,7 @@ bool rfm95_send_receive_cycle(rfm95_handle_t *handle, const uint8_t *send_data, 
 	phy_payload_len = 0;
 
 	// Only receive if configured to do so.
-	if (handle->receive_mode != RFM95_RECEIVE_MODE_NONE) {
+	/*if (handle->receive_mode != RFM95_RECEIVE_MODE_NONE) {
 
 		int8_t snr;
 
@@ -806,12 +819,13 @@ bool rfm95_send_receive_cycle(rfm95_handle_t *handle, const uint8_t *send_data, 
 
 	if (handle->save_config) {
 		handle->save_config(&(handle->config));
-	}
+	}*/
 
 	return true;
 }
 
 void rfm95_on_interrupt(rfm95_handle_t *handle, rfm95_interrupt_t interrupt)
 {
+	printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
 	handle->interrupt_times[interrupt] = handle->get_precision_tick();
 }
