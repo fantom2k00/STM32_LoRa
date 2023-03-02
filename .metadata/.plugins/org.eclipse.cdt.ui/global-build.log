@@ -2599,3 +2599,510 @@ Finished building: default.size.stdout
  
 Finished building: BBBeacon.list
  
+20:43:29 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:337:14: warning: unused variable 'frequency' [-Wunused-variable]
+  337 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:333:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  333 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'rfm95_on_interrupt':
+../Core/Src/rfm95.c:811:29: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'volatile long unsigned int'} [-Wformat=]
+  811 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                            ~^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                             |                                  |
+      |                             int                                uint32_t {aka volatile long unsigned int}
+      |                            %ld
+../Core/Src/rfm95.c:811:35: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+  811 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                                  ~^                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                   |                                         |
+      |                                   int                                       uint32_t {aka long unsigned int}
+      |                                  %ld
+At top level:
+../Core/Src/rfm95.c:643:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  643 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:467:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  467 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:290:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  290 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  35072	    560	   2000	  37632	   9300	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:44:47 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:337:14: warning: unused variable 'frequency' [-Wunused-variable]
+  337 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:333:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  333 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'rfm95_on_interrupt':
+../Core/Src/rfm95.c:811:29: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'volatile long unsigned int'} [-Wformat=]
+  811 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                            ~^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                             |                                  |
+      |                             int                                uint32_t {aka volatile long unsigned int}
+      |                            %ld
+../Core/Src/rfm95.c:811:35: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+  811 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                                  ~^                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                   |                                         |
+      |                                   int                                       uint32_t {aka long unsigned int}
+      |                                  %ld
+At top level:
+../Core/Src/rfm95.c:643:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  643 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:467:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  467 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:290:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  290 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  35008	    560	   2000	  37568	   92c0	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:45:38 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:337:14: warning: unused variable 'frequency' [-Wunused-variable]
+  337 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:333:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  333 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'rfm95_on_interrupt':
+../Core/Src/rfm95.c:811:29: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'volatile long unsigned int'} [-Wformat=]
+  811 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                            ~^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                             |                                  |
+      |                             int                                uint32_t {aka volatile long unsigned int}
+      |                            %ld
+../Core/Src/rfm95.c:811:35: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+  811 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                                  ~^                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                   |                                         |
+      |                                   int                                       uint32_t {aka long unsigned int}
+      |                                  %ld
+At top level:
+../Core/Src/rfm95.c:643:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  643 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:467:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  467 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:290:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  290 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  35036	    560	   2000	  37596	   92dc	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:47:59 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'HAL_GPIO_EXTI_Callback':
+../Core/Src/main.c:492:13: warning: too many arguments for format [-Wformat-extra-args]
+  492 |      printf("EXTI CB on DIO1\n", GPIO_Pin);
+      |             ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:497:13: warning: too many arguments for format [-Wformat-extra-args]
+  497 |      printf("EXTI CB on DIO5\n", GPIO_Pin);
+      |             ^~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  35004	    560	   2000	  37564	   92bc	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:48:36 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-size   BBBeacon.elf 
+   text	   data	    bss	    dec	    hex	filename
+  35004	    560	   2000	  37564	   92bc	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+20:49:44 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:182:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  182 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+../Core/Src/main.c: In function 'HAL_GPIO_EXTI_Callback':
+../Core/Src/main.c:491:13: warning: too many arguments for format [-Wformat-extra-args]
+  491 |      printf("EXTI CB on DIO1\n", GPIO_Pin);
+      |             ^~~~~~~~~~~~~~~~~~~
+../Core/Src/main.c:496:13: warning: too many arguments for format [-Wformat-extra-args]
+  496 |      printf("EXTI CB on DIO5\n", GPIO_Pin);
+      |             ^~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34980	    560	   2000	  37540	   92a4	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:52:06 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:335:14: warning: unused variable 'frequency' [-Wunused-variable]
+  335 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:331:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  331 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'rfm95_on_interrupt':
+../Core/Src/rfm95.c:809:29: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'volatile long unsigned int'} [-Wformat=]
+  809 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                            ~^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                             |                                  |
+      |                             int                                uint32_t {aka volatile long unsigned int}
+      |                            %ld
+../Core/Src/rfm95.c:809:35: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
+  809 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
+      |                                  ~^                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                                   |                                         |
+      |                                   int                                       uint32_t {aka long unsigned int}
+      |                                  %ld
+At top level:
+../Core/Src/rfm95.c:641:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  641 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:465:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  465 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:288:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  288 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34928	    560	   2000	  37488	   9270	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:55:36 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:182:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  182 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'wait_for_irq':
+../Core/Src/rfm95.c:159:28: error: expected ';' before 'return'
+  159 |    printf("LoRa Timeout\n")
+      |                            ^
+      |                            ;
+  160 |    return false;
+      |    ~~~~~~                   
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:336:14: warning: unused variable 'frequency' [-Wunused-variable]
+  336 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:332:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  332 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+At top level:
+../Core/Src/rfm95.c:642:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  642 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:466:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  466 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:289:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  289 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+make: *** [Core/Src/subdir.mk:43: Core/Src/rfm95.o] Error 1
+make: *** Waiting for unfinished jobs....
+"make -j16 all" terminated with exit code 2. Build might be incomplete.
+20:56:35 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:336:14: warning: unused variable 'frequency' [-Wunused-variable]
+  336 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:332:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  332 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+At top level:
+../Core/Src/rfm95.c:642:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  642 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:466:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  466 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:289:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  289 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34880	    560	   2000	  37440	   9240	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+20:59:45 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:336:14: warning: unused variable 'frequency' [-Wunused-variable]
+  336 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:332:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  332 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+At top level:
+../Core/Src/rfm95.c:642:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  642 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:466:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  466 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:289:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  289 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34904	    560	   2000	  37464	   9258	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:03:15 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:181:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  181 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34892	    560	   2000	  37452	   924c	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:06:05 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:182:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  182 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:336:14: warning: unused variable 'frequency' [-Wunused-variable]
+  336 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:332:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  332 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+At top level:
+../Core/Src/rfm95.c:642:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  642 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:466:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  466 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:289:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  289 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34972	    560	   2000	  37532	   929c	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:10:17 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:182:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  182 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34972	    560	   2000	  37532	   929c	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:14:05 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:182:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  182 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34972	    560	   2000	  37532	   929c	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:15:36 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:182:12: warning: variable 'val_analogue' set but not used [-Wunused-but-set-variable]
+  182 |    uint8_t val_analogue;
+      |            ^~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  34972	    560	   2000	  37532	   929c	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:16:45 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-size   BBBeacon.elf 
+   text	   data	    bss	    dec	    hex	filename
+  34972	    560	   2000	  37532	   929c	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+21:21:34 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:333:14: warning: unused variable 'frequency' [-Wunused-variable]
+  333 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:329:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  329 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+At top level:
+../Core/Src/rfm95.c:639:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  639 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:463:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  463 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:286:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  286 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  35020	    560	   2000	  37580	   92cc	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 
+21:25:57 **** Incremental Build of configuration Debug for project BBBeacon ****
+make -j16 all 
+arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
+../Core/Src/rfm95.c: In function 'process_mac_commands':
+../Core/Src/rfm95.c:313:14: warning: unused variable 'frequency' [-Wunused-variable]
+  313 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+      |              ^~~~~~~~~
+../Core/Src/rfm95.c:309:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  309 |     uint8_t dl_settings = frame_payload[index++];
+      |             ^~~~~~~~~~~
+../Core/Src/rfm95.c: In function 'send_package':
+../Core/Src/rfm95.c:568:11: warning: assignment to 'uint32_t *' {aka 'long unsigned int *'} from 'uint32_t' {aka 'volatile long unsigned int'} makes pointer from integer without a cast [-Wint-conversion]
+  568 |  tx_ticks = handle->interrupt_times[RFM95_INTERRUPT_DIO0];
+      |           ^
+At top level:
+../Core/Src/rfm95.c:618:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  618 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+      |             ^~~~~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:442:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  442 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+      |             ^~~~~~~~~~~~~~~
+../Core/Src/rfm95.c:267:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  267 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload, size_t frame_payload_length,
+      |             ^~~~~~~~~~~~~~~~~~~~
+arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: BBBeacon.elf
+ 
+arm-none-eabi-size   BBBeacon.elf 
+arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
+   text	   data	    bss	    dec	    hex	filename
+  35052	    560	   2000	  37612	   92ec	BBBeacon.elf
+Finished building: default.size.stdout
+ 
+Finished building: BBBeacon.list
+ 

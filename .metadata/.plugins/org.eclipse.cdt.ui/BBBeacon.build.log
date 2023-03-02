@@ -1,43 +1,26 @@
-19:57:38 **** Incremental Build of configuration Debug for project BBBeacon ****
+21:25:57 **** Incremental Build of configuration Debug for project BBBeacon ****
 make -j16 all 
-arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
 arm-none-eabi-gcc "../Core/Src/rfm95.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F302x8 -c -I../Core/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc -I../Drivers/STM32F3xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F3xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/rfm95.d" -MT"Core/Src/rfm95.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/rfm95.o"
-../Core/Src/main.c: In function 'HAL_GPIO_EXTI_Callback':
-../Core/Src/main.c:496:13: warning: too many arguments for format [-Wformat-extra-args]
-  496 |      printf("EXTI CB on DIO1\n", GPIO_Pin);
-      |             ^~~~~~~~~~~~~~~~~~~
-../Core/Src/main.c:501:13: warning: too many arguments for format [-Wformat-extra-args]
-  501 |      printf("EXTI CB on DIO5\n", GPIO_Pin);
-      |             ^~~~~~~~~~~~~~~~~~~
 ../Core/Src/rfm95.c: In function 'process_mac_commands':
-../Core/Src/rfm95.c:337:14: warning: unused variable 'frequency' [-Wunused-variable]
-  337 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
+../Core/Src/rfm95.c:313:14: warning: unused variable 'frequency' [-Wunused-variable]
+  313 |     uint32_t frequency = (frequency_lsb | (frequency_msb << 8) | (frequency_hsb << 16)) * 100;
       |              ^~~~~~~~~
-../Core/Src/rfm95.c:333:13: warning: unused variable 'dl_settings' [-Wunused-variable]
-  333 |     uint8_t dl_settings = frame_payload[index++];
+../Core/Src/rfm95.c:309:13: warning: unused variable 'dl_settings' [-Wunused-variable]
+  309 |     uint8_t dl_settings = frame_payload[index++];
       |             ^~~~~~~~~~~
-../Core/Src/rfm95.c: In function 'rfm95_on_interrupt':
-../Core/Src/rfm95.c:829:29: warning: format '%d' expects argument of type 'int', but argument 2 has type 'uint32_t' {aka 'volatile long unsigned int'} [-Wformat=]
-  829 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
-      |                            ~^           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                             |                                  |
-      |                             int                                uint32_t {aka volatile long unsigned int}
-      |                            %ld
-../Core/Src/rfm95.c:829:35: warning: format '%d' expects argument of type 'int', but argument 3 has type 'uint32_t' {aka 'long unsigned int'} [-Wformat=]
-  829 |  printf("Setting interrupt %d to %d\n", handle->interrupt_times[interrupt], handle->get_precision_tick());
-      |                                  ~^                                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      |                                   |                                         |
-      |                                   int                                       uint32_t {aka long unsigned int}
-      |                                  %ld
+../Core/Src/rfm95.c: In function 'send_package':
+../Core/Src/rfm95.c:568:11: warning: assignment to 'uint32_t *' {aka 'long unsigned int *'} from 'uint32_t' {aka 'volatile long unsigned int'} makes pointer from integer without a cast [-Wint-conversion]
+  568 |  tx_ticks = handle->interrupt_times[RFM95_INTERRUPT_DIO0];
+      |           ^
 At top level:
-../Core/Src/rfm95.c:661:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
-  661 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
+../Core/Src/rfm95.c:618:13: warning: 'decode_phy_payload' defined but not used [-Wunused-function]
+  618 | static bool decode_phy_payload(rfm95_handle_t *handle, uint8_t payload_buf[64], uint8_t payload_length,
       |             ^~~~~~~~~~~~~~~~~~
-../Core/Src/rfm95.c:467:13: warning: 'receive_package' defined but not used [-Wunused-function]
-  467 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
+../Core/Src/rfm95.c:442:13: warning: 'receive_package' defined but not used [-Wunused-function]
+  442 | static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
       |             ^~~~~~~~~~~~~~~
-../Core/Src/rfm95.c:290:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
-  290 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload,
+../Core/Src/rfm95.c:267:13: warning: 'process_mac_commands' defined but not used [-Wunused-function]
+  267 | static bool process_mac_commands(rfm95_handle_t *handle, const uint8_t *frame_payload, size_t frame_payload_length,
       |             ^~~~~~~~~~~~~~~~~~~~
 arm-none-eabi-gcc -o "BBBeacon.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\filip\Documents\Kulen\Master\Master Thesis\Programs\BBBeacon\STM32F302R8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="BBBeacon.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 Finished building target: BBBeacon.elf
@@ -45,11 +28,11 @@ Finished building target: BBBeacon.elf
 arm-none-eabi-size   BBBeacon.elf 
 arm-none-eabi-objdump -h -S  BBBeacon.elf  > "BBBeacon.list"
    text	   data	    bss	    dec	    hex	filename
-  34928	    560	   2000	  37488	   9270	BBBeacon.elf
+  35052	    560	   2000	  37612	   92ec	BBBeacon.elf
 Finished building: default.size.stdout
  
 Finished building: BBBeacon.list
  
 
-19:57:38 Build Finished. 0 errors, 9 warnings. (took 872ms)
+21:25:58 Build Finished. 0 errors, 6 warnings. (took 864ms)
 

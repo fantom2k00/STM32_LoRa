@@ -83,9 +83,10 @@ int _write(int file, char *ptr, int len)
 static uint32_t get_precision_tick()
 {
     __disable_irq();
-    HAL_TIM_Base_Start(&htim1);
+
+    printf("TIM1 value: %ld\n", __HAL_TIM_GET_COUNTER(&htim1));
     uint32_t precision_tick = tim_tick_msb | __HAL_TIM_GET_COUNTER(&htim1);
-    HAL_TIM_Base_Stop(&htim1);
+
     __enable_irq();
 
     return precision_tick;
@@ -157,9 +158,12 @@ int main(void)
 
   printf("\n");
 
+  HAL_TIM_Base_Start(&htim1);
+
   if (!rfm95_init(&rfm95_handle)) {
 	  printf("LoRa RFM9x: Init FAIL\n");
-  } else {
+  }
+  else {
 	  printf("LoRa RFM9x: LoRa SUCCESS\n");
   }
 
@@ -184,6 +188,7 @@ int main(void)
 		  val_analogue = HAL_ADC_GetValue(&hadc1);
 	  }
 	  HAL_ADC_Stop(&hadc1);
+	  printf("ADC1: %d\n", val_analogue);
 
 	  //Example GPIO
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
@@ -361,7 +366,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 2048;
+  htim1.Init.Prescaler = 0;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim1.Init.Period = 65535;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -483,14 +488,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
     if (GPIO_Pin == RFM9x_DIO0_Pin)
     {
+    	printf("EXTI CB on DIO0\n");
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO0);
     }
     else if (GPIO_Pin == RFM9x_DIO1_Pin)
     {
+    	printf("EXTI CB on DIO1\n", GPIO_Pin);
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO1);
     }
     else if (GPIO_Pin == RFM9x_DIO5_Pin)
     {
+    	printf("EXTI CB on DIO5\n", GPIO_Pin);
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO5);
     }
 }
