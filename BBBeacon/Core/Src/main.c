@@ -145,6 +145,9 @@ int main(void)
 
   /* USER CODE BEGIN SysInit */
 
+  printf("\n");
+  printf("START\n");
+
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -155,19 +158,10 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
-  printf("\n");
-
   if (!rfm95_init(&rfm95_handle)) {
 	  printf("LoRa RFM9x: Init FAIL\n");
   } else {
 	  printf("LoRa RFM9x: LoRa SUCCESS\n");
-  }
-
-  uint8_t data_packet[] = {0x01, 0x02, 0x03, 0x4};
-  if (!rfm95_send_receive_cycle(&rfm95_handle, data_packet, sizeof(data_packet))) {
-	  printf("LoRa RFM9x: Send FAIL\n");
-  } else {
-	  printf("LoRa RFM9x: Send SUCCESS\n");
   }
 
   /* USER CODE END 2 */
@@ -177,13 +171,21 @@ int main(void)
 
   while (1)
   {
+	  uint8_t data_packet[] = {0x01, 0x02, 0x03, 0x4};
+	  if (!rfm95_send_receive_cycle(&rfm95_handle, data_packet, sizeof(data_packet))) {
+		  printf("LoRa RFM9x: Send FAIL\n");
+	  } else {
+		  printf("LoRa RFM9x: Send SUCCESS\n");
+	  }
+
 	  //Example ADC
 	  HAL_ADC_Start(&hadc1);
-	  uint8_t val_analogue;
+	  uint8_t val_a;
 	  if (HAL_ADC_PollForConversion(&hadc1, 10) == HAL_OK) {
-		  val_analogue = HAL_ADC_GetValue(&hadc1);
+		  val_a = HAL_ADC_GetValue(&hadc1);
 	  }
 	  HAL_ADC_Stop(&hadc1);
+	  printf("%d", val_a);
 
 	  //Example GPIO
 	  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_10, GPIO_PIN_SET);
@@ -481,6 +483,9 @@ static void MX_GPIO_Init(void)
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	if (!(&rfm95_handle))
+		return;
+
     if (GPIO_Pin == RFM9x_DIO0_Pin)
     {
         rfm95_on_interrupt(&rfm95_handle, RFM95_INTERRUPT_DIO0);

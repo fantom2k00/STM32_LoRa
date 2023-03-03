@@ -113,9 +113,9 @@ static void config_load_default(rfm95_handle_t *handle)
 	handle->config.rx_frame_count = 0;
 	handle->config.rx1_delay = 1;
 	handle->config.channel_mask = 0;
-	config_set_channel(handle, 0, 868100000);
-	config_set_channel(handle, 1, 868300000);
-	config_set_channel(handle, 2, 868500000);
+	config_set_channel(handle, 0, 433000000);
+	config_set_channel(handle, 1, 433300000);
+	config_set_channel(handle, 2, 433500000);
 }
 
 static void reset(rfm95_handle_t *handle)
@@ -412,17 +412,14 @@ static bool receive_at_scheduled_time(rfm95_handle_t *handle, uint32_t scheduled
 	handle->interrupt_times[RFM95_INTERRUPT_DIO1] = 0;
 	handle->interrupt_times[RFM95_INTERRUPT_DIO5] = 0;
 
-	// Move modem to lora standby.
-	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_STANDBY)) return false;
+	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_STANDBY))
+		return false;
 
-	// Wait for the modem to be ready.
 	wait_for_irq(handle, RFM95_INTERRUPT_DIO5, RFM95_WAKEUP_TIMEOUT);
-
-	// Now sleep until the real scheduled time.
 	handle->precision_sleep_until(scheduled_time);
 
-	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_RX_SINGLE)) return false;
-
+	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_RX_SINGLE))
+		return false;
 	return true;
 }
 
@@ -437,91 +434,6 @@ static void calculate_rx_timings(rfm95_handle_t *handle, uint32_t bw, uint8_t sf
 	volatile int32_t rx_offset_ticks = (int32_t)(((int64_t)rx_offset_ns * (int64_t)handle->precision_tick_frequency) / 1000000);
 	*rx_target = tx_ticks + handle->precision_tick_frequency * handle->config.rx1_delay + rx_offset_ticks;
 	*rx_window_symbols = rx_window_ns / symbol_rate_ns;
-}
-
-static bool receive_package(rfm95_handle_t *handle, uint32_t tx_ticks, uint8_t *payload_buf, size_t *payload_len,
-                            int8_t *snr)
-{
-	*payload_len = 0;
-
-	uint32_t rx1_target, rx1_window_symbols;
-	calculate_rx_timings(handle, 125000, 7, tx_ticks, &rx1_target, &rx1_window_symbols);
-
-	assert(rx1_window_symbols <= 0x3ff);
-
-	// Configure modem (125kHz, 4/6 error coding rate, SF7, single packet, CRC enable, AGC auto on)
-	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_1, 0x72)) return false;
-	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_2, 0x74 | ((rx1_window_symbols >> 8) & 0x3))) return false;
-	if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_3, 0x04)) return false;
-
-	// Set maximum symbol timeout.
-	if (!write_register(handle, RFM95_REGISTER_SYMB_TIMEOUT_LSB, rx1_window_symbols)) return false;
-
-	// Set IQ registers according to AN1200.24.
-	if (!write_register(handle, RFM95_REGISTER_INVERT_IQ_1, RFM95_REGISTER_INVERT_IQ_1_RX)) return false;
-	if (!write_register(handle, RFM95_REGISTER_INVERT_IQ_2, RFM95_REGISTER_INVERT_IQ_2_RX)) return false;
-
-	receive_at_scheduled_time(handle, rx1_target);
-
-	// If there was nothing received during RX1, try RX2.
-	if (!wait_for_rx_irqs(handle)) {
-
-		// Return modem to sleep.
-		if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_SLEEP)) return false;
-
-		if (handle->receive_mode == RFM95_RECEIVE_MODE_RX12) {
-
-			uint32_t rx2_target, rx2_window_symbols;
-			calculate_rx_timings(handle, 125000, 12, tx_ticks, &rx2_target, &rx2_window_symbols);
-
-			// Configure 869.525 MHz
-			if (!configure_frequency(handle, 869525000)) return false;
-
-			// Configure modem SF12
-			if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_1, 0xc2)) return false;
-			if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_2, 0x74 | ((rx2_window_symbols >> 8) & 0x3))) return false;
-			if (!write_register(handle, RFM95_REGISTER_MODEM_CONFIG_3, 0x04)) return false;
-
-			// Set maximum symbol timeout.
-			if (!write_register(handle, RFM95_REGISTER_SYMB_TIMEOUT_LSB, rx2_window_symbols)) return false;
-
-			receive_at_scheduled_time(handle, rx2_target);
-
-			if (!wait_for_rx_irqs(handle)) {
-				// No payload during in RX1 and RX2
-				return true;
-			}
-		}
-
-		return true;
-	}
-
-	uint8_t irq_flags;
-	read_register(handle, RFM95_REGISTER_IRQ_FLAGS, &irq_flags, 1);
-
-	// Check if there was a CRC error.
-	if (irq_flags & 0x20) {
-		return true;
-	}
-
-	int8_t packet_snr;
-	if (!read_register(handle, RFM95_REGISTER_PACKET_SNR, (uint8_t *)&packet_snr, 1)) return false;
-	*snr = (int8_t)(packet_snr / 4);
-
-	// Read received payload length.
-	uint8_t payload_len_internal;
-	if (!read_register(handle, RFM95_REGISTER_FIFO_RX_BYTES_NB, &payload_len_internal, 1)) return false;
-
-	// Read received payload itself.
-	if (!write_register(handle, RFM95_REGISTER_FIFO_ADDR_PTR, 0)) return false;
-	if (!read_register(handle, RFM95_REGISTER_FIFO_ACCESS, payload_buf, payload_len_internal)) return false;
-
-	// Return modem to sleep.
-	if (!write_register(handle, RFM95_REGISTER_OP_MODE, RFM95_REGISTER_OP_MODE_LORA_SLEEP)) return false;
-
-	// Successful payload receive, set payload length to tell caller.
-	*payload_len = payload_len_internal;
-	return true;
 }
 
 static bool send_package(rfm95_handle_t *handle, uint8_t *payload_buf, size_t payload_len, uint8_t channel,
@@ -702,7 +614,6 @@ bool rfm95_send_receive_cycle(rfm95_handle_t *handle, const uint8_t *send_data, 
 {
 	uint8_t phy_payload_buf[64] = { 0 };
 
-	// Build the up-link phy payload.
 	size_t phy_payload_len = encode_phy_payload(handle, phy_payload_buf, send_data, send_data_length, 1);
 
 	uint8_t random_channel = select_random_channel(handle);
@@ -783,9 +694,5 @@ bool rfm95_send_receive_cycle(rfm95_handle_t *handle, const uint8_t *send_data, 
 
 void rfm95_on_interrupt(rfm95_handle_t *handle, rfm95_interrupt_t interrupt)
 {
-	printf("LoRa RFM9x: Setting EXTI interrupt %ld to %ld\n",
-			handle->interrupt_times[interrupt],
-			handle->get_precision_tick()
-		);
 	handle->interrupt_times[interrupt] = handle->get_precision_tick();
 }
